@@ -7,12 +7,15 @@ const args = process.argv.slice(1)
 const serve = args.some(val => val === '--start-dev')
 
 // Let electron reloads by itself when rsbuild watches changes in ./app/
+// Temporarily disable electron-reload to troubleshoot
+/*
 if (serve) {
   require('electron-reload')(__dirname, {
     electron: `${__dirname}/node_modules/.bin/electron`,
     hardResetMethod: 'exit'
   })
 }
+*/
 
 // To avoid being garbage collected
 let mainWindow
@@ -42,6 +45,7 @@ app.on('activate', function () {
  * Creates the main browser window
  */
 function createWindow() {
+    console.log('Creating window...');
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -54,13 +58,24 @@ function createWindow() {
 
     // Use dynamic port from environment variable if available, otherwise default
     const devUrl = process.env.ELECTRON_START_URL || "http://localhost:1234";
+    console.log('Loading URL:', devUrl);
     const startUrl = serve ? devUrl : url.format({
           pathname: path.join(__dirname, 'dist/index.html'),
           protocol: 'file:',
           slashes: true
         });
 
-    mainWindow.loadURL(startUrl)
+    mainWindow.loadURL(startUrl);
+
+    // Log when the page finishes loading
+    mainWindow.webContents.on('did-finish-load', () => {
+        console.log('Page loaded successfully');
+    });
+
+    // Log any errors during loading
+    mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+        console.error('Error loading page:', errorCode, errorDescription);
+    });
 
     // Open DevTools in development
     if (serve) {
@@ -68,6 +83,7 @@ function createWindow() {
     }
 
     mainWindow.on('closed', function () {
+        console.log('Window closed');
         mainWindow = null
     })
 }
