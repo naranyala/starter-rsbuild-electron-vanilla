@@ -18,12 +18,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@/lib/*": ["lib/*"]
+      "@/lib/*": ["src/lib/*"]
     }
   },
   "include": [
     "src/**/*",
-    "lib/**/*",
     "rsbuild.config.ts"
   ],
   "exclude": [

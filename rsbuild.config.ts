@@ -4,7 +4,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': './src',
-      '@/lib': './lib',
+      '@/lib': './src/lib',
     },
   },
   html: {

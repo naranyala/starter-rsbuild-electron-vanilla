@@ -1,7 +1,7 @@
 import 'winbox/dist/css/winbox.min.css';
 import WinBox from 'winbox/src/js/winbox';
-import { menuData } from '../lib/renderer/menu-data';
-import { generateWindowContent, generateTheme } from '../lib/renderer/window-generator';
+import { menuData } from './lib/renderer/menu-data';
+import { generateWindowContent, generateTheme } from './lib/renderer/window-generator';
 
 // Define TypeScript interfaces
 interface MenuItem {

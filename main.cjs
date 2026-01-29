@@ -9,7 +9,7 @@ const serve = args.some(val => val === '--start-dev')
 // Let electron reloads by itself when rsbuild watches changes in ./app/
 if (serve) {
   require('electron-reload')(__dirname, {
-    electron: require(`${__dirname}/node_modules/.bin/electron`),
+    electron: `${__dirname}/node_modules/.bin/electron`,
     hardResetMethod: 'exit'
   })
 }

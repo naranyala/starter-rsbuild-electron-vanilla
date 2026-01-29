@@ -1,22 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 
-// Copy icon files to build directory
+// Copy icon files to dist directory
 function copyIcons() {
-  const assetsDir = path.join(__dirname, '..', 'assets');
-  const buildDir = path.join(__dirname, '..', 'build');
+  const assetsDir = path.join(__dirname, '..', 'src', 'assets');
+  const distDir = path.join(__dirname, '..', 'dist');
 
-  // Ensure build directory exists
-  if (!fs.existsSync(buildDir)) {
-    fs.mkdirSync(buildDir, { recursive: true });
+  // Ensure dist directory exists
+  if (!fs.existsSync(distDir)) {
+    fs.mkdirSync(distDir, { recursive: true });
   }
 
   // Copy icon files
-  const iconFiles = ['icon.ico'];
+  const iconFiles = ['icon.ico', 'icon.png', 'favicon.ico'];
 
   iconFiles.forEach((file) => {
     const sourcePath = path.join(assetsDir, file);
-    const destPath = path.join(buildDir, file);
+    const destPath = path.join(distDir, file);
 
     if (fs.existsSync(sourcePath)) {
       fs.copyFileSync(sourcePath, destPath);
