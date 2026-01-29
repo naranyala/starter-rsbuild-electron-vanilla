@@ -1,5 +1,5 @@
 // Main process utilities and configurations
-// This lib folder contains code for the Electron main process
+// This main folder contains code for the Electron main process
 
 /**
  * Application configuration
@@ -13,9 +13,9 @@ export const appConfig = {
     minWidth: 800,
     minHeight: 600,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      webSecurity: false,
+      nodeIntegration: false, // Changed to false for security
+      contextIsolation: true, // Changed to true for security
+      webSecurity: true, // Changed to true for security
     },
   },
 };

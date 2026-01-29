@@ -1,50 +1,9 @@
 import 'winbox/dist/css/winbox.min.css';
 import WinBox from 'winbox/src/js/winbox';
-import { menuData } from './lib/renderer/menu-data';
-import { generateWindowContent, generateTheme } from './lib/renderer/window-generator';
-
-// Define TypeScript interfaces
-interface MenuItem {
-  id: string;
-  title: string;
-  content: string;
-  category: string;
-  tags: string[];
-}
-
-interface FuzzySearchResult {
-  matches: boolean;
-  highlightedText: string;
-}
-
-// Simple fuzzy search function
-const fuzzySearch = (text: string, query: string): FuzzySearchResult => {
-  if (!query) return { matches: true, highlightedText: text };
-
-  const lowerText = text.toLowerCase();
-  const lowerQuery = query.toLowerCase();
-
-  let matchFound = true;
-  let highlightedText = '';
-  let queryIndex = 0;
-
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-    const lowerChar = char.toLowerCase();
-
-    if (queryIndex < lowerQuery.length && lowerChar === lowerQuery[queryIndex]) {
-      highlightedText += `<mark>${char}</mark>`;
-      queryIndex++;
-    } else {
-      highlightedText += char;
-    }
-  }
-
-  // Check if all query characters were found in sequence
-  matchFound = queryIndex === lowerQuery.length;
-
-  return { matches: matchFound, highlightedText };
-};
+import { menuData } from './components/menu-data';
+import { generateWindowContent, generateTheme } from './components/window-generator';
+import { MenuItem, FuzzySearchResult } from './types/menu-item';
+import { fuzzySearch } from './utils/fuzzy-search';
 
 class App {
   private appElement: HTMLElement;
@@ -57,15 +16,6 @@ class App {
   public init(): void {
     this.render();
     this.bindEvents();
-    // Trigger the fade-in animation after a brief delay to ensure content is rendered
-    // The CSS animation will handle the fade-in, but we ensure it's triggered
-    setTimeout(() => {
-      const appDiv = this.appElement.querySelector('.App');
-      if (appDiv) {
-        // Remove the inline style to allow CSS animation to work properly
-        appDiv.style.removeProperty('opacity');
-      }
-    }, 10);
   }
 
   private render(): void {

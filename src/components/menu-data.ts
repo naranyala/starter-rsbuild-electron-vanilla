@@ -1,14 +1,6 @@
 // Dynamic menu configuration for the frontend fuzzy search
 // This allows for modular design where menu items can be easily updated
-
-// Define TypeScript interface for menu items
-interface MenuItem {
-  id: string;
-  title: string;
-  content: string;
-  category: string;
-  tags: string[];
-}
+import { MenuItem } from '../types/menu-item';
 
 export const menuData: MenuItem[] = [
   {

@@ -1,5 +1,6 @@
-import './reset.css';
-import './index.css';
+import './styles/reset.css';
+import './styles/index.css';
+import './styles/app.css';
 import App from './App';
 
 // Initialize the application when DOM is loaded
@@ -20,8 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Ensure the app container has proper initial styling
   const appDiv = document.getElementById('app');
   if (appDiv) {
-    appDiv.style.display = 'flex';
-    appDiv.style.flexDirection = 'column';
-    appDiv.style.minHeight = '100vh';
+    appDiv.style.height = '100vh';
+    appDiv.style.overflow = 'auto';
   }
 });

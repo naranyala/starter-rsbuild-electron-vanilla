@@ -4,12 +4,14 @@
   "description": "Boilerplate using Rsbuild as bundler for Electron apps.",
   "type": "module",
   "scripts": {
+    "deps:latest": "bunx npm-check-updates -u -p bun",
     "dev": "bun run scripts/start-dev-rsbuild.cjs",
     "rsbuild-dev": "bunx rsbuild dev --open",
     "electron-dev": "bunx electron main.cjs --start-dev",
     "start": "bunx electron main.cjs",
-    "build": "bunx rsbuild build && bun run copy-icons",
+    "build": "bunx rsbuild build && bun run build-preload && bun run copy-icons",
     "rsbuild-build": "bunx rsbuild build",
+    "build-preload": "tsc -p tsconfig.node.json",
     "copy-icons": "node scripts/build-icons.cjs",
     "type-check": "tsc --noEmit",
     "lint": "bunx @biomejs/biome check --write .",
@@ -68,10 +70,11 @@
   "devDependencies": {
     "@rsbuild/core": "^1.7.2",
     "@types/minimatch": "^6.0.0",
-    "@types/node": "^25.0.10",
-    "electron": "^10.4.7",
-    "electron-builder": "^22.14.13",
+    "@types/node": "^25.1.0",
+    "electron": "^40.0.0",
+    "electron-builder": "^26.4.0",
     "electron-reload": "^1.5.0",
+    "fs-extra": "^11.3.3",
     "typescript": "^5.9.3",
     "wait-on": "^9.0.3"
   }

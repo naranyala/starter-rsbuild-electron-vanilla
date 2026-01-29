@@ -46,13 +46,25 @@ app.on('activate', function () {
  */
 function createWindow() {
     console.log('Creating window...');
+
+    // Determine the correct path for the preload script based on environment
+    let preloadPath;
+    if (serve) {
+        // In development, the preload script is in the dist directory after build
+        preloadPath = path.join(__dirname, 'dist', 'preload.js');
+    } else {
+        // In production, the preload script should be in the resources directory
+        preloadPath = path.join(__dirname, 'preload.js');
+    }
+
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
-            webSecurity: false
+            nodeIntegration: false,        // Disable nodeIntegration for security
+            contextIsolation: true,        // Enable context isolation for security
+            webSecurity: true,             // Enable web security
+            preload: preloadPath           // Preload script for secure API exposure
         }
     })
 
@@ -77,10 +89,8 @@ function createWindow() {
         console.error('Error loading page:', errorCode, errorDescription);
     });
 
-    // Open DevTools in development
-    if (serve) {
-        mainWindow.webContents.openDevTools({ mode: 'detach' })
-    }
+    // DevTools will NOT open by default - user can open manually if needed
+    // To open manually: View -> Toggle Developer Tools or Cmd/Ctrl+Shift+I
 
     mainWindow.on('closed', function () {
         console.log('Window closed');
