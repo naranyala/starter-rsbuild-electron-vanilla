@@ -36,26 +36,16 @@
     },
     "linux": {
       "category": "Utility",
-      "target": [
-        "AppImage",
-        "deb"
-      ],
+      "target": ["AppImage", "deb"],
       "icon": "dist/icon.png"
     },
     "win": {
       "target": "msi",
       "icon": "dist/icon.png"
     },
-    "files": [
-      "src/main/**/*",
-      "dist/**/*"
-    ]
+    "files": ["src/main/**/*", "dist/**/*"]
   },
-  "keywords": [
-    "rsbuild",
-    "react",
-    "electron"
-  ],
+  "keywords": ["rsbuild", "react", "electron"],
   "license": "MIT",
   "dependencies": {
     "get-port": "^7.1.0",

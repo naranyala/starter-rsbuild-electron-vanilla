@@ -1,18 +1,20 @@
 import 'winbox/dist/css/winbox.min.css';
 import WinBox from 'winbox/src/js/winbox';
-import { menuData } from './components/menu-data';
-import { generateTheme, generateWindowContent } from './components/window-generator';
-import { fuzzySearch } from './lib/fuzzy-search';
-import type { MenuItem } from './types/menu-item';
-import DomUtils from './lib/dom-utils';
 import AsyncUtils from './lib/async-utils';
+import DomUtils from './lib/dom-utils';
+import { fuzzySearch } from './lib/fuzzy-search';
+import type { UseCase } from './use-cases';
+import { useCaseRegistry } from './use-cases';
 
 class App {
   private appElement: HTMLElement;
   private searchTerm: string = '';
+  private useCases: UseCase[] = [];
 
   constructor(appElement: HTMLElement) {
     this.appElement = appElement;
+    // Load all use cases from registry
+    this.useCases = useCaseRegistry.getAll();
   }
 
   public init(): void {
@@ -38,7 +40,7 @@ class App {
       id: 'cards-list',
     });
 
-    // Render cards content
+    // Render cards content based on use cases
     cardsContainer.innerHTML = this.renderCards();
 
     // Assemble the DOM structure
@@ -63,24 +65,24 @@ class App {
   }
 
   private renderCards(): string {
-    // Filter cards based on search term
-    const filteredCards = menuData.filter((card: MenuItem) => {
-      const titleMatch = fuzzySearch(card.title, this.searchTerm).matches;
-      return titleMatch;
+    // Filter use cases based on search term
+    const filteredUseCases = this.useCases.filter((useCase: UseCase) => {
+      return useCase.matchesSearch(this.searchTerm);
     });
 
-    if (filteredCards.length === 0) {
+    if (filteredUseCases.length === 0) {
       return '<div class="no-results">No matching topics found</div>';
     }
 
-    return filteredCards
-      .map((card: MenuItem, index: number) => {
+    return filteredUseCases
+      .map((useCase: UseCase, index: number) => {
         // Process title for highlighting
-        const processedTitle = fuzzySearch(card.title, this.searchTerm);
+        const processedTitle = fuzzySearch(useCase.config.title, this.searchTerm);
 
         return `
-        <div class="simple-card card-${index}" data-index="${index}" data-title="${card.title}">
-          <h3 class="simple-card-title">${processedTitle.matches ? processedTitle.highlightedText : card.title}</h3>
+        <div class="simple-card card-${index}" data-index="${index}" data-id="${useCase.config.id}" data-title="${useCase.config.title}">
+          <h3 class="simple-card-title">${processedTitle.matches ? processedTitle.highlightedText : useCase.config.title}</h3>
+          <span class="simple-card-category">${useCase.config.category}</span>
         </div>
       `;
       })
@@ -111,47 +113,35 @@ class App {
     // Bind card click events
     const cards = DomUtils.querySelectorAll('.simple-card', this.appElement);
     cards.forEach((card, index) => {
-      // Use event delegation for better performance
-      card.addEventListener('click', () => {
-        this.handleCardClick(index);
-      });
+      // Get the use case ID from the data attribute
+      const useCaseId = card.getAttribute('data-id');
+      if (useCaseId) {
+        card.addEventListener('click', () => {
+          this.handleCardClick(useCaseId);
+        });
+      }
     });
   }
 
-  private handleCardClick(index: number): void {
-    const card = menuData[index];
-    if (!card) return;
+  private handleCardClick(useCaseId: string): void {
+    // Find the use case from registry
+    const useCase = useCaseRegistry.get(useCaseId);
+    if (!useCase) return;
 
-    const { title } = card;
+    // Get window configuration from use case
+    const windowConfig = useCase.getWindowConfig();
 
-    // Define different themes for variety
-    const themes = [
-      { name: 'blue', bg: '#4a6cf7', color: 'white' },
-      { name: 'green', bg: '#4ade80', color: 'black' },
-      { name: 'purple', bg: '#a78bfa', color: 'white' },
-      { name: 'red', bg: '#f87171', color: 'white' },
-      { name: 'yellow', bg: '#fbbf24', color: 'black' },
-      { name: 'indigo', bg: '#6366f1', color: 'white' },
-    ];
-
-    // Select a theme based on the index to have consistent colors
-    const _theme = themes[index % themes.length];
-
-    // Generate dynamic content and theme based on the title
-    const dynamicContent = generateWindowContent(title);
-    const windowTheme = generateTheme(title);
-
-    // Create a WinBox window with the generated content
+    // Create a WinBox window with the use case configuration
     const winbox = new WinBox({
-      title: title,
-      html: `<div class="winbox-content"><h3 style="color: ${windowTheme.color};">${title}</h3><div style="color: ${windowTheme.color};" class="winbox-dynamic-content">Loading content...</div></div>`,
-      width: '500px',
-      height: '400px',
-      x: 'center',
-      y: 'center',
-      class: 'modern',
-      background: windowTheme.bg,
-      border: 4,
+      title: windowConfig.title,
+      html: useCase.getInitialHtml(),
+      width: windowConfig.width,
+      height: windowConfig.height,
+      x: windowConfig.x,
+      y: windowConfig.y,
+      class: windowConfig.class,
+      background: windowConfig.background,
+      border: windowConfig.border,
     });
 
     // Set the content after the window is created using WinBox's body property
@@ -160,10 +150,10 @@ class App {
       if (winbox?.body) {
         const contentDiv = DomUtils.querySelector('.winbox-dynamic-content', winbox.body);
         if (contentDiv) {
-          contentDiv.innerHTML = dynamicContent;
+          contentDiv.innerHTML = useCase.generateContent();
         } else {
           // If we can't find the specific div, replace all content in the body
-          winbox.body.innerHTML = `<div class="winbox-content"><h3 style="color: ${windowTheme.color};">${title}</h3><div style="color: ${windowTheme.color};">${dynamicContent}</div></div>`;
+          winbox.body.innerHTML = useCase.getFullHtml();
         }
       }
     });

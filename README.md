@@ -19,6 +19,17 @@ starter-rsbuild-electron-vanilla/
 ├── src/
 │   ├── main/                 # Electron main process
 │   │   ├── main.cjs          # Main process entry point
+│   │   ├── use-cases/         # Modular backend use cases
+│   │   │   ├── base.cjs          # Base use case class
+│   │   │   ├── index.cjs          # Registry and exports
+│   │   │   ├── electron-intro.cjs     # What is Electron?
+│   │   │   ├── electron-architecture.cjs  # Electron Architecture
+│   │   │   ├── electron-security.cjs     # Security Best Practices
+│   │   │   ├── electron-packaging.cjs    # Packaging and Distribution
+│   │   │   ├── electron-native-apis.cjs   # Native OS APIs
+│   │   │   ├── electron-performance.cjs   # Performance Optimization
+│   │   │   ├── electron-development.cjs   # Development Workflow
+│   │   │   └── electron-versions.cjs    # Version Management
 │   │   └── lib/              # Main process utilities
 │   │       ├── logger.cjs
 │   │       ├── window-manager.cjs
@@ -29,11 +40,23 @@ starter-rsbuild-electron-vanilla/
 │       ├── App.ts            # Application component
 │       ├── preload.ts        # Preload script
 │       ├── assets/           # Static assets
+│       ├── use-cases/       # Modular frontend use cases
+│       │   ├── types.ts         # Base interfaces
+│       │   ├── registry.ts       # Use case registry
+│       │   ├── index.ts          # Barrel exports and registration
+│       │   ├── electron-intro.ts     # What is Electron?
+│       │   ├── electron-architecture.ts # Electron Architecture
+│       │   ├── electron-security.ts     # Security Best Practices
+│       │   ├── electron-packaging.ts    # Packaging and Distribution
+│       │   ├── electron-native-apis.ts   # Native OS APIs
+│       │   ├── electron-performance.ts   # Performance Optimization
+│       │   ├── electron-development.ts   # Development Workflow
+│       │   └── electron-versions.ts    # Version Management
 │       ├── lib/              # Renderer utilities
 │       ├── components/       # UI components
 │       ├── styles/           # CSS styles
 │       └── types/            # TypeScript types
-├── scripts/                  # Build scripts
+├── scripts/                  # Build and development scripts
 │   ├── start-dev-rsbuild.cjs # Development server
 │   ├── copy-main.cjs         # Copy main process files
 │   └── build-icons.cjs       # Build icons
@@ -198,32 +221,62 @@ Distribution packaging configured in `package.json` under the `build` key:
 - Platform-specific targets
 - File inclusion patterns
 
-## Troubleshooting
+## Modular Use-Cases Architecture
 
-### Development Server Fails to Start
+The project implements a modular use-case architecture for scalable feature development. Each feature or topic is encapsulated in its own use case with separate frontend and backend implementations.
 
-1. Verify dependencies are installed: `bun install`
-2. Clear node_modules and reinstall: `rm -rf node_modules && bun install`
-3. Check that no other processes are using the required ports
+### Frontend Use-Cases
 
-### Build Fails
+Located in `src/renderer/use-cases/`, each use case provides:
 
-1. Run linting to check for errors: `bun run lint`
-2. Run type checking: `bun run build-preload`
-3. Clean the dist directory and rebuild: `rm -rf dist && bun run build`
+- **Configurable metadata** (title, category, tags, theme)
+- **Custom content generation** via `generateContent()` method
+- **Window configuration** via `getWindowConfig()` method
+- **Search integration** via `matchesSearch()` method
+- **HTML templates** for consistent window rendering
 
-### Electron Application Does Not Start
+### Backend Use-Cases
 
-1. Ensure the build completed successfully
-2. Check that all required files exist in `dist/`
-3. Verify the preload script was compiled: `ls -la dist/preload.js`
+Located in `src/main/use-cases/`, each use case provides:
 
-### Code Quality Issues
+- **Base class** extending `MainUseCase` with lifecycle hooks
+- **IPC handler registration** via `registerIPCHandlers()` method
+- **Window event handling** via `onWindowCreated()` method
+- **Cleanup logic** via `cleanup()` method
 
-Run linting and formatting checks:
+### Adding New Use-Cases
+
+**Frontend** (Renderer):
+
+1. Create a new file in `src/renderer/use-cases/` extending the `UseCase` base class
+2. Implement required properties: `config`, `theme`, `generateContent()`
+3. Add the new use case to `index.ts` imports and registration
+4. The application automatically discovers and uses the new use case
+
+**Backend** (Main Process):
+
+1. Create a new file in `src/main/use-cases/` extending the `MainUseCase` base class
+2. Implement `registerIPCHandlers()` to register IPC channels
+3. Add the use case to `index.cjs` requires
+4. The registry automatically discovers and initializes it
+
+## Code Quality
+
+The project uses Biome for code linting and formatting:
+
+- Linting ensures code quality and catches errors early
+- Automatic formatting maintains consistent code style
+- TypeScript compilation provides type safety
+
+Run linting:
 
 ```bash
 bun run lint
+```
+
+Run formatting:
+
+```bash
 bun run format
 ```
 

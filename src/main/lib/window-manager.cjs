@@ -46,13 +46,7 @@ class WindowManager {
    */
   getPreloadPath() {
     const path = require('node:path');
-    const serve = process.argv.some((val) => val === '--start-dev');
-
-    if (serve) {
-      return path.join(__dirname, '../dist', 'preload.js');
-    } else {
-      return path.join(__dirname, '../dist', 'preload.js');
-    }
+    return path.join(__dirname, '../dist', 'preload.js');
   }
 
   /**

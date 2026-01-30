@@ -136,9 +136,20 @@
 
 .simple-card-title {
   font-size: 1.1em;
-  margin: 0;
+  margin: 0 0 8px 0;
   color: var(--text-primary);
   font-weight: 500;
+}
+
+.simple-card-category {
+  font-size: 0.75em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: var(--card-hover);
+  padding: 2px 8px;
+  border-radius: 3px;
+  display: inline-block;
 }
 
 .no-results {

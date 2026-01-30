@@ -14,7 +14,7 @@ function copyIcons() {
   // Copy icon files
   const iconFiles = ['icon.ico', 'icon.png', 'favicon.ico'];
 
-  iconFiles.forEach((file) => {
+  for (const file of iconFiles) {
     const sourcePath = path.join(assetsDir, file);
     const destPath = path.join(distDir, file);
 
@@ -24,7 +24,7 @@ function copyIcons() {
     } else {
       console.warn(`Warning: ${sourcePath} does not exist`);
     }
-  });
+  }
 }
 
 copyIcons();

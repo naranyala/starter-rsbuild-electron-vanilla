@@ -11,7 +11,7 @@ const IpcUtils = {
    * @param {string} channel - IPC channel name
    * @param {Function} handler - Handler function
    */
-  registerHandler: function(channel, handler) {
+  registerHandler: (channel, handler) => {
     ipcMain.handle(channel, async (event, ...args) => {
       try {
         const result = await handler(event, ...args);
@@ -29,7 +29,7 @@ const IpcUtils = {
    * @param {string} channel - IPC channel name
    * @param {*} data - Data to send
    */
-  sendMessage: function(window, channel, data) {
+  sendMessage: (window, channel, data) => {
     if (
       window &&
       !window.isDestroyed() &&
@@ -46,10 +46,10 @@ const IpcUtils = {
    * @param {string} channel - IPC channel name
    * @param {*} data - Data to send
    */
-  broadcastMessage: function(windows, channel, data) {
-    windows.forEach((window) => {
+  broadcastMessage: (windows, channel, data) => {
+    for (const window of windows) {
       IpcUtils.sendMessage(window, channel, data);
-    });
+    }
   },
 
   /**
@@ -57,9 +57,9 @@ const IpcUtils = {
    * @param {string} channel - IPC channel name
    * @param {Function} handler - Handler function
    */
-  once: function(channel, handler) {
+  once: (channel, handler) => {
     ipcMain.once(channel, handler);
-  }
+  },
 };
 
 module.exports = IpcUtils;
