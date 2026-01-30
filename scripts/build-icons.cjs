@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 // Copy icon files to dist directory
 function copyIcons() {
-  const assetsDir = path.join(__dirname, '..', 'src', 'assets');
+  const assetsDir = path.join(__dirname, '..', 'src', 'renderer', 'assets');
   const distDir = path.join(__dirname, '..', 'dist');
 
   // Ensure dist directory exists

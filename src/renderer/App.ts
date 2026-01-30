@@ -1,9 +1,11 @@
 import 'winbox/dist/css/winbox.min.css';
 import WinBox from 'winbox/src/js/winbox';
 import { menuData } from './components/menu-data';
-import { generateWindowContent, generateTheme } from './components/window-generator';
-import { MenuItem, FuzzySearchResult } from './types/menu-item';
-import { fuzzySearch } from './utils/fuzzy-search';
+import { generateTheme, generateWindowContent } from './components/window-generator';
+import { fuzzySearch } from './lib/fuzzy-search';
+import type { MenuItem } from './types/menu-item';
+import DomUtils from './lib/dom-utils';
+import AsyncUtils from './lib/async-utils';
 
 class App {
   private appElement: HTMLElement;
@@ -19,27 +21,45 @@ class App {
   }
 
   private render(): void {
-    // Create the main application structure
-    this.appElement.innerHTML = `
-      <div class="App">
-        <main class="App-main-no-navbar">
-          <div class="search-container-no-navbar">
-            <input
-              type="text"
-              class="search-input"
-              placeholder="Search topics..."
-              value="${this.searchTerm}"
-            />
-            <div class="cards-list" id="cards-list">
-              ${this.renderCards()}
-            </div>
-          </div>
-        </main>
-        <footer class="App-footer">
-          <p>Get started by editing <code>src/App.ts</code> and save to reload.</p>
-        </footer>
-      </div>
-    `;
+    // Create the main application structure using DOM utilities
+    const appContainer = DomUtils.createElement('div', { className: 'App' });
+    const mainSection = DomUtils.createElement('main', { className: 'App-main-no-navbar' });
+    const searchContainer = DomUtils.createElement('div', {
+      className: 'search-container-no-navbar',
+    });
+    const searchInput = DomUtils.createElement('input', {
+      type: 'text',
+      className: 'search-input',
+      placeholder: 'Search topics...',
+      value: this.searchTerm,
+    });
+    const cardsContainer = DomUtils.createElement('div', {
+      className: 'cards-list',
+      id: 'cards-list',
+    });
+
+    // Render cards content
+    cardsContainer.innerHTML = this.renderCards();
+
+    // Assemble the DOM structure
+    searchContainer.appendChild(searchInput);
+    searchContainer.appendChild(cardsContainer);
+    mainSection.appendChild(searchContainer);
+
+    const footer = DomUtils.createElement('footer', { className: 'App-footer' });
+    const footerText = DomUtils.createElement('p', {}, [
+      'Get started by editing ',
+      DomUtils.createElement('code', {}, ['src/App.ts']),
+      ' and save to reload.',
+    ]);
+    footer.appendChild(footerText);
+
+    appContainer.appendChild(mainSection);
+    appContainer.appendChild(footer);
+
+    // Clear and append the new structure
+    this.appElement.innerHTML = '';
+    this.appElement.appendChild(appContainer);
   }
 
   private renderCards(): string {
@@ -53,32 +73,45 @@ class App {
       return '<div class="no-results">No matching topics found</div>';
     }
 
-    return filteredCards.map((card: MenuItem, index: number) => {
-      // Process title for highlighting
-      const processedTitle = fuzzySearch(card.title, this.searchTerm);
-      
-      return `
+    return filteredCards
+      .map((card: MenuItem, index: number) => {
+        // Process title for highlighting
+        const processedTitle = fuzzySearch(card.title, this.searchTerm);
+
+        return `
         <div class="simple-card card-${index}" data-index="${index}" data-title="${card.title}">
           <h3 class="simple-card-title">${processedTitle.matches ? processedTitle.highlightedText : card.title}</h3>
         </div>
       `;
-    }).join('');
+      })
+      .join('');
   }
 
   private bindEvents(): void {
+    // Use debounced search to improve performance
+    const debouncedSearch = AsyncUtils.debounce((value: string) => {
+      this.searchTerm = value;
+      this.render(); // Re-render the cards based on search term
+      this.bindEvents(); // Re-bind events after re-rendering
+    }, 300);
+
     // Bind search input event
-    const searchInput = this.appElement.querySelector('.search-input') as HTMLInputElement;
+    const searchInput = DomUtils.querySelector(
+      '.search-input',
+      this.appElement
+    ) as HTMLInputElement;
     if (searchInput) {
+      // Use the debounced version
       searchInput.addEventListener('input', (event) => {
-        this.searchTerm = (event.target as HTMLInputElement).value;
-        this.render(); // Re-render the cards based on search term
-        this.bindEvents(); // Re-bind events after re-rendering
+        const value = (event.target as HTMLInputElement).value;
+        debouncedSearch(value);
       });
     }
 
     // Bind card click events
-    const cards = this.appElement.querySelectorAll('.simple-card');
+    const cards = DomUtils.querySelectorAll('.simple-card', this.appElement);
     cards.forEach((card, index) => {
+      // Use event delegation for better performance
       card.addEventListener('click', () => {
         this.handleCardClick(index);
       });
@@ -102,7 +135,7 @@ class App {
     ];
 
     // Select a theme based on the index to have consistent colors
-    const theme = themes[index % themes.length];
+    const _theme = themes[index % themes.length];
 
     // Generate dynamic content and theme based on the title
     const dynamicContent = generateWindowContent(title);
@@ -122,9 +155,10 @@ class App {
     });
 
     // Set the content after the window is created using WinBox's body property
-    setTimeout(() => {
-      if (winbox && winbox.body) {
-        const contentDiv = winbox.body.querySelector('.winbox-dynamic-content');
+    // Use async utilities for better timing
+    AsyncUtils.delay(10).then(() => {
+      if (winbox?.body) {
+        const contentDiv = DomUtils.querySelector('.winbox-dynamic-content', winbox.body);
         if (contentDiv) {
           contentDiv.innerHTML = dynamicContent;
         } else {
@@ -132,7 +166,7 @@ class App {
           winbox.body.innerHTML = `<div class="winbox-content"><h3 style="color: ${windowTheme.color};">${title}</h3><div style="color: ${windowTheme.color};">${dynamicContent}</div></div>`;
         }
       }
-    }, 10);
+    });
   }
 }
 

@@ -4,24 +4,18 @@
   "description": "Boilerplate using Rsbuild as bundler for Electron apps.",
   "type": "module",
   "scripts": {
-    "deps:latest": "bunx npm-check-updates -u -p bun",
     "dev": "bun run scripts/start-dev-rsbuild.cjs",
-    "rsbuild-dev": "bunx rsbuild dev --open",
-    "electron-dev": "bunx electron main.cjs --start-dev",
-    "start": "bunx electron main.cjs",
-    "build": "bunx rsbuild build && bun run build-preload && bun run copy-icons",
-    "rsbuild-build": "bunx rsbuild build",
+    "start": "bunx electron src/main/main.cjs",
+    "build": "bunx rsbuild build && bun run build-preload && bun run copy-main && bun run copy-icons",
     "build-preload": "tsc -p tsconfig.node.json",
+    "copy-main": "node scripts/copy-main.cjs",
     "copy-icons": "node scripts/build-icons.cjs",
-    "type-check": "tsc --noEmit",
-    "lint": "bunx @biomejs/biome check --write .",
-    "lint-check": "bunx @biomejs/biome check .",
-    "format": "bunx @biomejs/biome format --write .",
-    "format-check": "bunx @biomejs/biome format .",
-    "electron-pack": "bunx electron-builder --dir",
-    "electron-dist": "bunx electron-builder",
-    "electron-postinstall": "bunx electron-builder install-app-deps",
-    "dist": "bun run build && bun run electron-dist"
+    "lint": "bunx @biomejs/biome check .",
+    "lint:fix": "bunx @biomejs/biome check --write .",
+    "format": "bunx @biomejs/biome format .",
+    "format:fix": "bunx @biomejs/biome format --write .",
+    "dist": "bun run build && bun run electron-dist",
+    "electron-dist": "bunx electron-builder"
   },
   "author": "naranyala",
   "build": {
@@ -53,7 +47,7 @@
       "icon": "dist/icon.png"
     },
     "files": [
-      "main.cjs",
+      "src/main/**/*",
       "dist/**/*"
     ]
   },
@@ -68,10 +62,11 @@
     "winbox": "^0.2.82"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
     "@rsbuild/core": "^1.7.2",
     "@types/minimatch": "^6.0.0",
     "@types/node": "^25.1.0",
-    "electron": "^40.0.0",
+    "electron": "^40.1.0",
     "electron-builder": "^26.4.0",
     "electron-reload": "^1.5.0",
     "fs-extra": "^11.3.3",

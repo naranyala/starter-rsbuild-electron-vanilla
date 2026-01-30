@@ -1,7 +1,7 @@
 // Preload script for secure API exposure to the renderer process
 // This file runs in a separate context and can expose limited APIs to the renderer
 
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge } from 'electron';
 
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
@@ -14,7 +14,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   //     ipcRenderer.send(channel, data);
   //   }
   // },
-  // 
+  //
   // receiveMessage: (channel: string, func: Function) => {
   //   // Whitelist channels to receive messages from
   //   const validChannels = ['fromMain'];

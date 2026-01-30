@@ -1,167 +1,257 @@
-# Electron + Vanilla TypeScript + WinBox Starter
+# Electron + Rsbuild Starter
 
-A modern starter template for building Electron applications using vanilla TypeScript with WinBox.js window management, bundled with Rsbuild.
+A modern starter template for building Electron applications using vanilla TypeScript, bundled with Rsbuild.
 
 ## Features
 
-- ✅ **Pure TypeScript** - No React or other frameworks, just vanilla TypeScript
-- ✅ **WinBox.js Integration** - Modern window management with custom windows
-- ✅ **Rsbuild Bundler** - Fast, modern bundling with Rsbuild
-- ✅ **Electron Ready** - Pre-configured for desktop application development
-- ✅ **FOUC Prevention** - Critical CSS inlined to prevent flash of unstyled content
-- ✅ **Modular Structure** - Clean project organization with all sources in `src/`
-- ✅ **Hot Reloading** - Development with live reloading
-- ✅ **Cross Platform** - Works on Windows, macOS, and Linux
+- Pure TypeScript with no frameworks
+- Rsbuild for fast bundling and development
+- Electron main and renderer process architecture
+- Modular project structure
+- Cross-platform support (Windows, macOS, Linux)
+- Code linting and formatting with Biome
+- Distribution packaging with electron-builder
 
 ## Project Structure
 
 ```
 starter-rsbuild-electron-vanilla/
-├── src/                    # Source files
-│   ├── assets/            # Static assets (icons, images)
-│   ├── lib/               # Shared libraries and utilities
-│   │   ├── main/          # Main process utilities
-│   │   └── renderer/      # Renderer process utilities
-│   ├── App.ts             # Main application logic
-│   ├── index.ts           # Application entry point
-│   ├── index.html         # HTML template
-│   ├── App.css            # Application styles
-│   ├── index.css          # Base styles
-│   └── reset.css          # CSS reset
-├── scripts/               # Build and development scripts
-├── main.cjs               # Electron main process
-├── rsbuild.config.ts      # Rsbuild configuration
-├── tsconfig.json          # TypeScript configuration
-└── package.json           # Project dependencies and scripts
+├── src/
+│   ├── main/                 # Electron main process
+│   │   ├── main.cjs          # Main process entry point
+│   │   └── lib/              # Main process utilities
+│   │       ├── logger.cjs
+│   │       ├── window-manager.cjs
+│   │       └── ipc-utils.cjs
+│   └── renderer/             # Renderer process (UI)
+│       ├── index.ts          # Entry point
+│       ├── index.html        # HTML template
+│       ├── App.ts            # Application component
+│       ├── preload.ts        # Preload script
+│       ├── assets/           # Static assets
+│       ├── lib/              # Renderer utilities
+│       ├── components/       # UI components
+│       ├── styles/           # CSS styles
+│       └── types/            # TypeScript types
+├── scripts/                  # Build scripts
+│   ├── start-dev-rsbuild.cjs # Development server
+│   ├── copy-main.cjs         # Copy main process files
+│   └── build-icons.cjs       # Build icons
+├── rsbuild.config.ts         # Rsbuild configuration
+├── tsconfig.json             # TypeScript configuration (renderer)
+├── tsconfig.node.json        # TypeScript configuration (main)
+├── biome.json                # Biome configuration
+└── package.json              # Project dependencies and scripts
 ```
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [Bun](https://bun.sh/) (recommended) or npm/yarn
+- Node.js v18 or higher
+- Bun (recommended) or npm
 
 ## Getting Started
 
 ### Installation
 
-1. Clone or download this repository
-2. Install dependencies:
+Clone or download the repository, then install dependencies:
 
 ```bash
 bun install
-# or if using npm
+```
+
+If using npm:
+
+```bash
 npm install
 ```
 
 ### Development
 
-To start the development server with hot reloading:
+Start the development server with hot reloading:
 
 ```bash
 bun run dev
-# or if using npm
-npm run dev
 ```
 
-This will:
-1. Start the Rsbuild development server
-2. Launch the Electron application
-3. Connect the renderer to the dev server
+This command:
+1. Starts the Rsbuild development server on a random available port
+2. Launches the Electron application
+3. Automatically reloads when source files change
 
 ### Building
 
-To create a production build:
+Create a production build:
 
 ```bash
 bun run build
-# or if using npm
-npm run build
 ```
 
-This will:
-1. Bundle the application with Rsbuild
-2. Copy required assets to the `dist/` directory
+This command:
+1. Bundles the renderer application with Rsbuild
+2. Compiles the preload script with TypeScript
+3. Copies main process files to the distribution directory
+4. Copies icon assets to the distribution directory
 
-### Packaging for Distribution
+The output is located in the `dist/` directory.
 
-To package the application for distribution:
+### Running the Built Application
+
+Launch the built Electron application:
+
+```bash
+bun run start
+```
+
+### Distribution Packaging
+
+Package the application for distribution:
 
 ```bash
 bun run dist
-# or if using npm
-npm run dist
 ```
 
-This will create distributable files in the `dist/` directory using electron-builder.
+This command:
+1. Runs a full production build
+2. Creates distributable packages using electron-builder
 
-## Scripts Available
+Output is located in `dist/` for build output and platform-specific packages in a `release/` directory.
+
+## Available Scripts
 
 | Script | Description |
 |--------|-------------|
-| `dev` | Start development server with Electron app |
-| `build` | Build the application for production |
+| `dev` | Start development server with Electron |
 | `start` | Run the built Electron application |
-| `rsbuild-dev` | Start Rsbuild dev server only |
-| `rsbuild-build` | Build with Rsbuild only |
+| `build` | Build for production |
+| `build-preload` | Compile preload TypeScript |
+| `copy-main` | Copy main process files to dist |
+| `copy-icons` | Copy icon assets to dist |
+| `lint` | Check code with Biome |
+| `lint:fix` | Check and fix code issues |
+| `format` | Format code with Biome |
+| `format:fix` | Format and write changes |
 | `dist` | Build and package for distribution |
-| `type-check` | Run TypeScript type checking |
-| `lint` | Lint and fix code |
-| `format` | Format code |
-
-## WinBox.js Integration
-
-The application includes WinBox.js for creating custom windows. Click on any card in the main interface to open a dynamic window with content generated based on the card title.
-
-Features:
-- Dynamic content generation
-- Theme-based coloring
-- Custom window controls
-- Responsive design
-
-## Styling
-
-The application uses a dark-themed UI with CSS variables for consistent theming. Critical CSS is inlined in the HTML to prevent FOUC (Flash of Unstyled Content).
+| `electron-dist` | Run electron-builder only |
 
 ## Architecture
 
-- **Main Process**: Handles Electron app lifecycle in `main.cjs`
-- **Renderer Process**: UI and application logic in `src/`
-- **Bundling**: Rsbuild for fast builds and development
-- **State Management**: Pure TypeScript without external state management libraries
+### Main Process
 
-## Environment
+The Electron main process handles:
+- Application lifecycle (ready, activate, window-all-closed)
+- Browser window creation and management
+- IPC communication between processes
 
-The application supports both development and production environments:
+Located in `src/main/main.cjs` and utilities in `src/main/lib/`.
 
-- **Development**: Connects to Rsbuild dev server via `ELECTRON_START_URL`
-- **Production**: Loads from `dist/index.html`
+### Renderer Process
+
+The renderer process handles:
+- UI rendering with TypeScript
+- Application component logic
+- Secure IPC communication via context bridge
+
+Located in `src/renderer/` with the entry point at `src/renderer/index.ts`.
+
+### Preload Script
+
+The preload script (`src/renderer/preload.ts`) provides a secure bridge between the main process and renderer process using Electron's contextBridge API.
+
+### IPC Communication
+
+The application uses Electron's IPC (Inter-Process Communication) for secure communication:
+
+- Main process handlers: `src/main/lib/ipc-utils.cjs`
+- Renderer API exposed via preload script
+
+### Environment Modes
+
+- **Development**: Renderer connects to Rsbuild dev server via `ELECTRON_START_URL` environment variable
+- **Production**: Renderer loads from local `dist/index.html`
+
+## Configuration
+
+### Rsbuild
+
+Modify `rsbuild.config.ts` to customize bundling behavior:
+- Entry points
+- Alias configuration
+- HTML template
+- Output paths
+
+### TypeScript
+
+- Renderer configuration: `tsconfig.json`
+- Main process configuration: `tsconfig.node.json`
+
+### Biome
+
+Code linting and formatting configured in `biome.json`:
+- Linting rules
+- Formatting preferences
+- Import organization
+
+### Electron Builder
+
+Distribution packaging configured in `package.json` under the `build` key:
+- Application metadata
+- Platform-specific targets
+- File inclusion patterns
 
 ## Troubleshooting
 
-### Development Server Issues
+### Development Server Fails to Start
 
-If the development server doesn't launch properly:
+1. Verify dependencies are installed: `bun install`
+2. Clear node_modules and reinstall: `rm -rf node_modules && bun install`
+3. Check that no other processes are using the required ports
 
-1. Ensure all dependencies are installed: `bun install`
-2. Clear cache if needed: `rm -rf node_modules && bun install`
-3. Check that ports are available
+### Build Fails
 
-### Build Issues
+1. Run linting to check for errors: `bun run lint`
+2. Run type checking: `bun run build-preload`
+3. Clean the dist directory and rebuild: `rm -rf dist && bun run build`
 
-For build problems:
+### Electron Application Does Not Start
 
-1. Verify TypeScript compilation: `bun run type-check`
-2. Check for linting errors: `bun run lint`
-3. Clean and rebuild: `rm -rf dist && bun run build`
+1. Ensure the build completed successfully
+2. Check that all required files exist in `dist/`
+3. Verify the preload script was compiled: `ls -la dist/preload.js`
 
-## Contributing
+### Code Quality Issues
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+Run linting and formatting checks:
+
+```bash
+bun run lint
+bun run format
+```
+
+To automatically fix issues:
+
+```bash
+bun run lint:fix
+bun run format:fix
+```
+
+## Dependencies
+
+### Runtime Dependencies
+
+- `get-port`: Automatic port selection
+- `winbox`: Window management library
+
+### Development Dependencies
+
+- `@rsbuild/core`: Build tool
+- `@biomejs/biome`: Linter and formatter
+- `electron`: Desktop application framework
+- `electron-builder`: Distribution packaging
+- `typescript`: Type checking
+- `fs-extra`: File system utilities
+- `wait-on`: Wait for resources
+- `electron-reload`: Hot reloading support
 
 ## License
 
-MIT © [Your Name]
+MIT

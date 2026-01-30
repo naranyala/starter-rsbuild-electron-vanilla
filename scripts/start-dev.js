@@ -1,4 +1,4 @@
-const { spawn } = require('child_process');
+const { spawn } = require('node:child_process');
 const getPortModule = require('get-port');
 const waitOn = require('wait-on');
 
@@ -34,10 +34,14 @@ async function startDevServer() {
         // Pass the port to electron via environment variable
         process.env.ELECTRON_START_URL = `http://localhost:${port}`;
 
-        const electronProcess = spawn('./node_modules/.bin/electron', ['main.js', '--start-dev'], {
-          stdio: 'inherit',
-          env: { ...process.env, ELECTRON_START_URL: `http://localhost:${port}` },
-        });
+        const electronProcess = spawn(
+          './node_modules/.bin/electron',
+          ['src/main/main.cjs', '--start-dev'],
+          {
+            stdio: 'inherit',
+            env: { ...process.env, ELECTRON_START_URL: `http://localhost:${port}` },
+          }
+        );
 
         electronProcess.on('close', (code) => {
           console.log(`Electron process exited with code ${code}`);

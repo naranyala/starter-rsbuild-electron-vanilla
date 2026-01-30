@@ -2,7 +2,7 @@
 export const fuzzySearch = (text: string, query: string) => {
   if (!query) return { matches: true, highlightedText: text };
 
-  const lowerText = text.toLowerCase();
+  const _lowerText = text.toLowerCase();
   const lowerQuery = query.toLowerCase();
 
   let matchFound = true;
