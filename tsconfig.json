@@ -18,7 +18,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@/lib/*": ["src/lib/*"]
+      "@/main/lib/*": ["src/main/lib/*"],
+      "@/renderer/lib/*": ["src/renderer/lib/*"],
+      "@/shared/lib/*": ["src/shared/lib/*"]
     }
   },
   "include": ["src/**/*", "rsbuild.config.ts", "scripts/**/*"],
