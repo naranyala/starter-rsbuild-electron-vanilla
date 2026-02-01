@@ -1,31 +1,24 @@
 import './styles/reset.css';
 import './styles/index.css';
 import './styles/app.css';
-import App from './App';
-import DomUtils from './lib/dom-utils';
 
-// Initialize the application when DOM is loaded
-document.addEventListener('DOMContentLoaded', async () => {
-  // Use DOM utilities to get the app container
-  const appContainer = DomUtils.querySelector('#app');
-  if (appContainer) {
-    // Create the main application structure
-    appContainer.innerHTML = '<div id="root"></div>';
-    const rootElement = DomUtils.querySelector('#root');
-
-    if (rootElement) {
-      // Initialize the App
-      const app = new App(rootElement);
-      app.init();
-    }
-  }
-
-  // Ensure the app container has proper initial styling
-  const appDiv = DomUtils.querySelector('#app');
-  if (appDiv) {
-    DomUtils.setStyles(appDiv, {
-      height: '100vh',
-      overflow: 'auto',
+// Simple test to see if imports work
+console.log('Testing imports...');
+try {
+  // Try importing just a class from app.ts
+  import('./app')
+    .then((module) => {
+      console.log('App module loaded:', module);
+      const App = module.App;
+      if (typeof window !== 'undefined') {
+        new App();
+      }
+    })
+    .catch((err) => {
+      console.error('Failed to load app module:', err);
     });
-  }
-});
+} catch (err) {
+  console.error('Import error:', err);
+}
+
+// The App class handles initialization automatically

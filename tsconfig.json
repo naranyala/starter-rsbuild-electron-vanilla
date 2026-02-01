@@ -21,6 +21,6 @@
       "@/lib/*": ["src/lib/*"]
     }
   },
-  "include": ["src/**/*", "rsbuild.config.ts"],
-  "exclude": ["node_modules", "dist", "build", "scripts", "main.cjs"]
+  "include": ["src/**/*", "rsbuild.config.ts", "scripts/**/*"],
+  "exclude": ["node_modules", "dist", "build"]
 }

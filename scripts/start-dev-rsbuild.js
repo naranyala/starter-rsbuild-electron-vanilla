@@ -6,13 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const node_child_process_1 = require("node:child_process");
 const get_port_1 = __importDefault(require("get-port"));
 const wait_on_1 = __importDefault(require("wait-on"));
-const getPort = typeof get_port_1.default === 'function' ? get_port_1.default : get_port_1.default.default;
+const getPort = get_port_1.default;
 async function startDevServer() {
     try {
         const port = await getPort();
         console.log(`Using port: ${port}`);
         process.env.PORT = port.toString();
-        const parcelProcess = (0, node_child_process_1.spawn)('./node_modules/.bin/parcel', ['./src/index.html', '--dist-dir', 'build', '--port', port], {
+        const rsbuildProcess = (0, node_child_process_1.spawn)('./node_modules/.bin/rsbuild', ['dev', '--port', port], {
             stdio: 'inherit',
             env: { ...process.env },
         });
@@ -27,16 +27,16 @@ async function startDevServer() {
                 });
                 electronProcess.on('close', (code) => {
                     console.log(`Electron process exited with code ${code}`);
-                    parcelProcess.kill();
+                    rsbuildProcess.kill();
                 });
             }
             catch (waitError) {
-                console.error('Timeout waiting for Parcel server to start:', waitError);
-                parcelProcess.kill();
+                console.error('Timeout waiting for Rsbuild server to start:', waitError);
+                rsbuildProcess.kill();
             }
         }, 2000);
-        parcelProcess.on('close', (code) => {
-            console.log(`Parcel process exited with code ${code}`);
+        rsbuildProcess.on('close', (code) => {
+            console.log(`Rsbuild process exited with code ${code}`);
         });
     }
     catch (error) {
