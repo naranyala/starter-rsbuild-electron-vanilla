@@ -49,7 +49,9 @@
   "keywords": ["rsbuild", "react", "electron"],
   "license": "MIT",
   "dependencies": {
+    "clsx": "^2.1.1",
     "get-port": "^7.1.0",
+    "goober": "^2.1.14",
     "winbox": "^0.2.82"
   },
   "devDependencies": {
