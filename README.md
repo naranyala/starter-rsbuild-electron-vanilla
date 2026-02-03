@@ -1,113 +1,97 @@
-# Professional Electron Desktop Application Framework
+# Electron + Rsbuild + Vanilla TS Starter
 
-Enterprise-grade starter kit for building cross-platform desktop applications with Electron, Rsbuild, and TypeScript. Accelerate your development timeline with a production-ready foundation that follows industry best practices and security standards.
+Build production-grade desktop apps faster with a modern Electron foundation, a lightning-fast renderer pipeline, and a clean, extensible feature architecture. This starter kit gives you a polished baseline with real-world patterns instead of demo-only scaffolding.
 
-## Transform Your Development Process
+## Why This Repo
 
-Stop spending weeks on boilerplate configuration. Our starter kit provides a complete, production-ready foundation that gets you building features from day one. Focus on your unique value proposition instead of infrastructure concerns.
+- Fast renderer builds with Rsbuild.
+- Secure-by-design defaults are supported and easy to enforce.
+- A structured use-case system for feature discovery and expansion.
+- A minimal, powerful UI layer using custom reactivity and templating.
+- WinBox-powered floating windows for desktop-grade UX patterns.
+- Clear separation between main, preload, and renderer concerns.
 
-**Save 40+ Hours of Setup Time**
-Eliminate the complexity of configuring Electron security, bundling, IPC communication, and distribution pipelines. Everything is pre-configured with security-first principles and modern tooling.
+## What’s Inside
 
-**Scale from MVP to Enterprise**
-Built with modularity and maintainability at the forefront. The architecture supports growth from simple utilities to complex enterprise applications without requiring architectural rewrites.
+- Electron main process with window manager and lifecycle services.
+- Renderer app in vanilla TypeScript with a lightweight template engine.
+- Custom signal-based reactivity for state and updates.
+- Goober + Clsx for component-level styling.
+- Global CSS for layout and app-level styling.
+- Preload bridge ready for secure IPC.
+- Electron-builder distribution config baked in.
 
-**Cross-Platform Excellence**
-Deploy seamlessly to Windows, macOS, and Linux from a single codebase. Built-in packaging and distribution tools ensure professional installation experiences across all platforms.
+## Quick Start
 
-## Core Advantages
-
-**Lightning-Fast Development Environment**
-Rsbuild leverages Rust-based compilation for exceptional build performance. Development servers launch in seconds with hot module replacement for instant feedback. Production builds are optimized with tree-shaking for minimal bundle sizes.
-
-**Enterprise Security Standards**
-Security is embedded into the architecture, not an afterthought. Context isolation is enabled by default, preload scripts provide controlled IPC access, and content security policies protect against injection attacks. Follows all Electron security recommendations out of the box.
-
-**Complete Type Safety**
-End-to-end TypeScript implementation with strict type checking across all processes. Shared type definitions ensure consistency between main, renderer, and preload processes. Catch errors at compile time, not runtime.
-
-**Professional Distribution Pipeline**
-Comprehensive packaging solution supporting Windows, macOS, and Linux. Includes code signing, auto-update mechanisms, and platform-specific optimizations. Deliver professional installation experiences that meet enterprise deployment requirements.
-
-## Technical Specifications
-
-- **Electron 40+** - Latest cross-platform desktop framework
-- **Rsbuild 1.7+** - High-performance Rust-powered bundler
-- **TypeScript 5+** - Full type safety across all processes
-- **Biome** - Automated code quality and formatting
-- **electron-builder** - Professional distribution packaging
-- **WinBox** - Advanced modal window management
-- **Modular Architecture** - Scalable feature organization
-
-## Rapid Deployment Process
-
-**Get Started in Minutes**
-
-Initialize your development environment:
 ```bash
-git clone <repository-url>
-cd starter-rsbuild-electron-vanilla
 bun install
-```
-
-Launch with live development:
-```bash
 bun run dev
 ```
 
-Your application opens immediately with hot reloading. Source changes reflect instantly without application restarts.
+Notes:
 
-**Production Deployment Ready**
+- The dev script starts Electron from `dist/main/index.js`.
+- If you edit main process files, run `bun run build-main`.
+- If you edit preload, run `bun run build-preload`.
 
-Build optimized production assets:
-```bash
-bun run build
-bun run start
-```
-
-Create distribution packages:
-```bash
-bun run dist
-```
-
-## Architectural Excellence
-
-**Multi-Process Design Pattern**
-Clear separation of concerns between application layers:
-
-- **Main Process**: Application lifecycle, window management, OS integrations (`src/main/index.ts`)
-- **Renderer Process**: User interface implementation with web technologies (`src/renderer/`)
-- **Preload Scripts**: Secure IPC bridge with context isolation (`src/renderer/preload.ts`)
-- **Modular Features**: Extensible use-case pattern for feature organization
-
-**Scalable Feature Architecture**
-The use-case pattern enables effortless feature addition without core application modifications. Each feature encapsulates its configuration, behavior, and content generation, ensuring consistent functionality across the application.
-
-## Command Reference
+## Scripts
 
 | Command | Purpose |
-|---------|---------|
-| `bun run dev` | Launch development server with HMR |
-| `bun run build` | Generate optimized production build |
-| `bun run start` | Execute built application |
-| `bun run dist` | Create distribution packages |
-| `bun run lint` | Execute code quality analysis |
-| `bun run format` | Apply consistent code formatting |
+| --- | --- |
+| `bun run dev` | Run Rsbuild dev server + Electron |
+| `bun run build` | Build renderer, compile main, copy icons |
+| `bun run start` | Run the built Electron app |
+| `bun run dist` | Build and package with electron-builder |
+| `bun run lint` | Biome code checks |
+| `bun run lint:fix` | Auto-fix lint issues |
+| `bun run format` | Format with Biome |
+| `bun run format:fix` | Format and write changes |
 
-## Extensibility Framework
+## Architecture At A Glance
 
-Expand functionality using the built-in use-case pattern. Create new classes extending the `UseCase` base class, register in the feature index, and the application automatically incorporates them into the user interface. This approach guarantees consistent behavior and simplifies maintenance across the application lifecycle.
+- Main process entry: `src/main/index.ts`
+- Window and lifecycle services: `src/main/services`
+- Use-case system (main): `src/main/features/electron-info`
+- Renderer entry: `src/renderer/index.ts`
+- Home page and WinBox UI: `src/renderer/pages/home-page.ts`
+- Use-case system (renderer): `src/renderer/features/electron-info`
+- Preload bridge: `src/renderer/preload.ts`
+- Styles: `src/renderer/styles/app.css`
 
-Includes comprehensive example implementations covering: architecture patterns, security implementation, native API integration, performance optimization, distribution strategies, development workflows, and version management.
+## Documentation
 
-## Business Benefits
+- Start here: `docs/INDEX.md`
+- AI agents: `docs/AI-AGENTS.md`
+- Architecture: `docs/ARCHITECTURE.md`
+- Workflows: `docs/WORKFLOWS.md`
+- Conventions: `docs/CONVENTIONS.md`
+- Security: `docs/SECURITY.md`
+- Styling: `docs/STYLING.md`
+- Reactive styling: `docs/REACTIVE-STYLING.md`
 
-- **Reduced Time-to-Market**: Skip infrastructure setup and begin feature development immediately
-- **Lower Maintenance Costs**: Modern tooling and architecture reduce long-term maintenance overhead
-- **Security Assurance**: Pre-configured security measures protect against common vulnerabilities
-- **Professional Quality**: Production-ready code quality and distribution capabilities
-- **Team Productivity**: Consistent architecture patterns accelerate team onboarding
+## Use-Case Feature Framework
 
-## Licensing
+Features are shipped as self-contained use cases. Each use case provides:
 
-MIT License - suitable for both commercial and open-source projects.
+- Metadata like `id`, `title`, and tags.
+- Optional IPC handlers in the main process.
+- Renderer content and theme configuration.
+
+Main-side use cases live in `src/main/features/electron-info`. Renderer-side use cases live in `src/renderer/features/electron-info`. The UI is built from the registry, so new use cases show up automatically once registered.
+
+## Security Posture
+
+This starter is compatible with Electron security recommendations. The `WindowManager` defaults to strict settings, but `src/main/config/app-config.ts` currently overrides them. Review `docs/SECURITY.md` and update `contextIsolation`, `preload`, and IPC exposure before production releases.
+
+## Distribution
+
+Packaging is handled by electron-builder and configured in `package.json` under `build`. Targets include:
+
+- Windows MSI
+- Linux AppImage and DEB
+
+The config also includes a DMG layout for macOS builds.
+
+## License
+
+MIT License.
