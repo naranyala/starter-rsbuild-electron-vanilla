@@ -1,49 +1,134 @@
-// Basic DOM utilities for the renderer process
+/**
+ * DOM utilities for the renderer process
+ */
+
 export class DomUtils {
-  static querySelector<T = Element>(selector: string, parent?: Element | Document): T | null {
-    return (parent || document).querySelector(selector) as T | null;
+  /**
+   * Query selector with type assertion
+   */
+  static querySelector(selector: string): Element | null {
+    return document.querySelector(selector);
   }
 
-  static querySelectorAll<T = Element>(
-    selector: string,
-    parent?: Element | Document
-  ): NodeListOf<T> {
-    return (parent || document).querySelectorAll(selector) as NodeListOf<T>;
+  /**
+   * Query selector all with type assertion
+   */
+  static querySelectorAll(selector: string): NodeListOf<Element> {
+    return document.querySelectorAll(selector);
   }
 
-  static createElement<K extends keyof HTMLElementTagNameMap>(
-    tag: K,
-    attributes?: Record<string, any>,
-    children?: (string | Node)[]
-  ): HTMLElementTagNameMap[K] {
-    const element = document.createElement(tag);
-
-    if (attributes) {
-      Object.entries(attributes).forEach(([key, value]) => {
-        if (key === 'className') {
-          element.className = value;
-        } else if (key === 'style' && typeof value === 'object') {
-          Object.assign(element.style, value);
-        } else {
-          element.setAttribute(key, value);
-        }
-      });
-    }
-
-    if (children) {
-      children.forEach((child) => {
-        if (typeof child === 'string') {
-          element.appendChild(document.createTextNode(child));
-        } else {
-          element.appendChild(child);
-        }
-      });
-    }
-
-    return element;
-  }
-
+  /**
+   * Set multiple styles at once
+   */
   static setStyles(element: HTMLElement, styles: Partial<CSSStyleDeclaration>): void {
     Object.assign(element.style, styles);
+  }
+
+  /**
+   * Add class to element
+   */
+  static addClass(element: Element, className: string): void {
+    element.classList.add(className);
+  }
+
+  /**
+   * Remove class from element
+   */
+  static removeClass(element: Element, className: string): void {
+    element.classList.remove(className);
+  }
+
+  /**
+   * Toggle class on element
+   */
+  static toggleClass(element: Element, className: string): boolean {
+    return element.classList.toggle(className);
+  }
+
+  /**
+   * Check if element has class
+   */
+  static hasClass(element: Element, className: string): boolean {
+    return element.classList.contains(className);
+  }
+
+  /**
+   * Set attribute on element
+   */
+  static setAttribute(element: Element, name: string, value: string): void {
+    element.setAttribute(name, value);
+  }
+
+  /**
+   * Get attribute from element
+   */
+  static getAttribute(element: Element, name: string): string | null {
+    return element.getAttribute(name);
+  }
+
+  /**
+   * Remove attribute from element
+   */
+  static removeAttribute(element: Element, name: string): void {
+    element.removeAttribute(name);
+  }
+
+  /**
+   * Set text content
+   */
+  static setTextContent(element: HTMLElement, text: string): void {
+    element.textContent = text;
+  }
+
+  /**
+   * Set HTML content
+   */
+  static setHTML(element: HTMLElement, html: string): void {
+    element.innerHTML = html;
+  }
+
+  /**
+   * Add event listener
+   */
+  static addEventListener<K extends keyof HTMLElementEventMap>(
+    element: HTMLElement,
+    event: K,
+    handler: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any
+  ): () => void {
+    element.addEventListener(event, handler);
+    return () => element.removeEventListener(event, handler);
+  }
+
+  /**
+   * Wait for element to exist
+   */
+  static waitForElement(selector: string, timeout: number = 5000): Promise<Element | null> {
+    return new Promise((resolve) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        resolve(element);
+        return;
+      }
+
+      const observer = new MutationObserver(() => {
+        const element = document.querySelector(selector);
+        if (element) {
+          observer.disconnect();
+          resolve(element);
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+
+      if (timeout > 0) {
+        setTimeout(() => {
+          observer.disconnect();
+          resolve(null);
+        }, timeout);
+      }
+    });
   }
 }

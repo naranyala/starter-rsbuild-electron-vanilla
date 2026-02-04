@@ -1,9 +1,9 @@
-import { createReactiveStyles } from '../lib/reactive-styles';
-import { computed, effect, signal } from '../lib/reactivity';
-import type { Signal } from '../lib/reactivity';
-import { css, styled } from '../lib/styling';
-import { h, render } from '../lib/template';
-import type { TemplateNode } from '../lib/template';
+import { createReactiveStyles } from '../../frontend/lib/reactive-styles';
+import { computed, effect, signal } from '../../frontend/lib/reactivity';
+import type { Signal } from '../../frontend/lib/reactivity';
+import { css, styled } from '../../frontend/lib/styling';
+import { h, render } from '../../frontend/lib/template';
+import type { TemplateNode } from '../../frontend/lib/template';
 
 // ============================================
 // EXAMPLE: Complete Reactive + Styled UI

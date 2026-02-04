@@ -10,7 +10,7 @@
   --success: #27c93f;
   --warning: #ffbd2e;
   --danger: #ff5f56;
-  --sidebar-width: 240px;
+  --sidebar-width: 500px;
 }
 
 * {
@@ -39,12 +39,13 @@ body {
   top: 0;
   width: var(--sidebar-width);
   height: 100vh;
-  background: var(--bg-panel);
+  background: linear-gradient(180deg, #1e1e2e 0%, #181825 100%);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: 24px;
   z-index: 1000;
+  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.4);
 }
 
 .sidebar.show {
@@ -54,17 +55,19 @@ body {
 .sidebar-home {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
-  padding: 12px 14px;
-  background: var(--accent);
+  padding: 16px 20px;
+  background: linear-gradient(135deg, var(--accent) 0%, #764ba2 100%);
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   color: white;
-  font-size: 0.9em;
+  font-size: 1.1em;
   font-weight: 600;
   cursor: pointer;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
 }
 
 .sidebar-home:hover {
@@ -87,14 +90,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 4px;
-  font-size: 0.7em;
-  font-weight: 600;
+  padding: 12px 4px;
+  font-size: 0.75em;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   color: var(--text-secondary);
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 12px;
 }
 
 .window-count {
@@ -133,18 +136,21 @@ body {
 .dock-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  gap: 14px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.25s ease;
+  margin-bottom: 6px;
 }
 
 .dock-item:hover {
-  background: #333;
+  background: rgba(102, 126, 234, 0.15);
   border-color: var(--accent);
+  transform: translateX(6px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .dock-item.active {

@@ -2,8 +2,8 @@ import { join } from 'node:path';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { BrowserWindow, app, ipcMain } from 'electron';
+import { mainUseCaseRegistry } from '../backend/use-cases/electron-info/index.js';
 import { appConfig } from './config/app-config.js';
-import { mainUseCaseRegistry } from './features/electron-info/index.js';
 import { Logger } from './services/logger.js';
 import { WindowManager } from './services/window-manager.js';
 
@@ -90,7 +90,7 @@ function createWindow() {
 
   // Load the appropriate URL based on environment
   const devUrl = process.env.ELECTRON_START_URL || 'http://localhost:1234';
-  const startUrl = serve ? devUrl : `file://${join(__dirname, '../../dist/index.html')}`;
+  const startUrl = serve ? devUrl : `file://${join(__dirname, '../..', 'index.html')}`;
 
   logger.info('Loading URL:', startUrl);
   window.loadURL(startUrl);

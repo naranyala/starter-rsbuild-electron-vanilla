@@ -8,12 +8,12 @@
  * - Together in a cohesive system
  */
 
-import { animate, bem, createRxClass, cx, responsive, rx } from '../lib/class-utils';
-import { computed, effect, signal } from '../lib/reactivity';
-import type { Signal } from '../lib/reactivity';
-import { css, styled } from '../lib/styling';
-import { h, render } from '../lib/template';
-import type { TemplateNode } from '../lib/template';
+import { animate, bem, createRxClass, cx, responsive, rx } from '../../frontend/lib/class-utils';
+import { computed, effect, signal } from '../../frontend/lib/reactivity';
+import type { Signal } from '../../frontend/lib/reactivity';
+import { css, styled } from '../../frontend/lib/styling';
+import { h, render } from '../../frontend/lib/template';
+import type { TemplateNode } from '../../frontend/lib/template';
 
 // ============================================
 // 1. Define Application State

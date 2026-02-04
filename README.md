@@ -83,6 +83,33 @@ Main-side use cases live in `src/main/features/electron-info`. Renderer-side use
 
 This starter is compatible with Electron security recommendations. The `WindowManager` defaults to strict settings, but `src/main/config/app-config.ts` currently overrides them. Review `docs/SECURITY.md` and update `contextIsolation`, `preload`, and IPC exposure before production releases.
 
+### Security Features
+
+This starter now includes comprehensive security features:
+
+- **Security Testing Suite**: Using Bun test runner with tests for Electron security best practices
+- **Security Scripts**: Automated scripts for auditing, linting, and reporting security issues
+- **Security Build Pipeline**: A build process that includes security checks
+- **Dependency Auditing**: Automatic scanning for vulnerable dependencies
+- **Security Reports**: Detailed reports on the security posture of your application
+
+Run security checks with:
+```bash
+# Run all security checks
+bun run security:check
+
+# Run security-focused build
+bun run security:build
+
+# Generate security report
+bun run security:report
+
+# Run security audit
+bun run security:audit
+```
+
+See `docs/SECURITY_FEATURES.md` for complete documentation on security features.
+
 ## Distribution
 
 Packaging is handled by electron-builder and configured in `package.json` under `build`. Targets include:

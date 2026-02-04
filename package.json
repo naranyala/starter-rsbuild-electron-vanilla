@@ -16,7 +16,16 @@
     "format": "bunx @biomejs/biome format .",
     "format:fix": "bunx @biomejs/biome format --write .",
     "dist": "bun run build && bun run electron-dist",
-    "electron-dist": "bunx electron-builder"
+    "electron-dist": "bunx electron-builder",
+    "test": "bun test tests/security/",
+    "test:security": "bun test tests/security/",
+    "security:audit": "bun run scripts/security/audit.ts",
+    "security:dependency-audit": "bun run scripts/security/dependency-audit.ts",
+    "security:lint": "bun run scripts/security/lint.ts",
+    "security:report": "bun run scripts/security/report-generator.ts",
+    "security:check": "bun run scripts/security/run-all.ts",
+    "security:build": "bun run scripts/security/build-pipeline.ts",
+    "security:ci": "bun run security:lint && bun run security:audit && bun run test:security"
   },
   "author": "naranyala",
   "build": {
@@ -51,12 +60,12 @@
   "dependencies": {
     "clsx": "^2.1.1",
     "get-port": "^7.1.0",
-    "goober": "^2.1.14",
+    "goober": "^2.1.18",
     "winbox": "^0.2.82"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@rsbuild/core": "^1.7.2",
+    "@rsbuild/core": "^1.7.3",
     "@types/minimatch": "^6.0.0",
     "@types/node": "^25.2.0",
     "@types/wait-on": "^5.3.4",

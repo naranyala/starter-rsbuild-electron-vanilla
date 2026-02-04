@@ -29,7 +29,7 @@ async function startDevServer() {
     setTimeout(async () => {
       try {
         // Try to start Electron with current setup
-        const electronProcess = spawn('./node_modules/.bin/electron', ['--no-sandbox', 'dist/main/index.js'], {
+        const electronProcess = spawn('./node_modules/.bin/electron', ['--no-sandbox', 'dist/main/main/index.js'], {
           stdio: 'inherit',
           env: {
             ...process.env,

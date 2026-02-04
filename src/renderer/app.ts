@@ -1,5 +1,6 @@
 // Main application controller for renderer process
 import HomePage from './pages/home-page';
+import { initHomePage } from './pages/home-page';
 import { DomUtils } from './utils/dom-utils';
 
 export class App {
@@ -11,7 +12,6 @@ export class App {
   }
 
   private async initialize(): Promise<void> {
-    // Wait for DOM to be ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this.setupApp());
     } else {
@@ -21,23 +21,19 @@ export class App {
 
   private async setupApp(): Promise<void> {
     console.log('setupApp called');
-    // Use DOM utilities to get the app container
     const appContainer = DomUtils.querySelector('#app');
     console.log('appContainer:', appContainer);
+
     if (appContainer) {
-      // Create the main application structure
       appContainer.innerHTML = '<div id="root"></div>';
       this.rootElement = DomUtils.querySelector('#root') as HTMLElement;
       console.log('rootElement:', this.rootElement);
 
       if (this.rootElement) {
-        // Initialize the HomePage
         console.log('Initializing HomePage...');
-        const homePage = new HomePage(this.rootElement);
-        homePage.init();
+        initHomePage(this.rootElement);
         console.log('HomePage initialized');
 
-        // Ensure the app container has proper initial styling
         const appDiv = DomUtils.querySelector('#app') as HTMLElement;
         if (appDiv) {
           DomUtils.setStyles(appDiv, {
@@ -50,7 +46,6 @@ export class App {
   }
 }
 
-// Initialize the app when module is loaded
 if (typeof window !== 'undefined') {
   new App();
 }

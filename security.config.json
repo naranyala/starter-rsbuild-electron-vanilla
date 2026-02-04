@@ -1,0 +1,28 @@
+{
+  "security": {
+    "checks": {
+      "codeAudit": true,
+      "dependencyAudit": true,
+      "staticAnalysis": true,
+      "tests": true,
+      "buildVerification": true
+    },
+    "thresholds": {
+      "criticalVulnerabilities": 0,
+      "highVulnerabilities": 0,
+      "mediumVulnerabilities": 5,
+      "lowVulnerabilities": 10
+    },
+    "flags": {
+      "enforceContextIsolation": true,
+      "disableNodeIntegration": true,
+      "enableWebSecurity": true,
+      "validateProtocolHandlers": true
+    },
+    "output": {
+      "reportFormat": "json",
+      "reportPath": "./reports/security-report.json",
+      "verbose": true
+    }
+  }
+}

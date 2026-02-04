@@ -18,8 +18,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@/main/lib/*": ["src/main/lib/*"],
-      "@/renderer/lib/*": ["src/renderer/lib/*"],
+      "@/backend/lib/*": ["src/backend/lib/*"],
+      "@/backend/use-cases/*": ["src/backend/use-cases/*"],
+      "@/frontend/lib/*": ["src/frontend/lib/*"],
+      "@/frontend/use-cases/*": ["src/frontend/use-cases/*"],
       "@/shared/lib/*": ["src/shared/lib/*"]
     }
   },
